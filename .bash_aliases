@@ -1,0 +1,1 @@
+alias eim='emacs -nw'
