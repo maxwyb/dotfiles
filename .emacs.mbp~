@@ -1,3 +1,11 @@
+;; Add Emacs package archive: MELPA 
+(require 'package) ;; You might already have this line
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+(when (< emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+(package-initialize) ;; You might already have this line
 
 ;; Install Emacs Markdown Mode
 ;; markdown-mode installed using brew, so (add-to-list 'load-path not needed.
@@ -12,6 +20,11 @@
 (add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+;; Install Neotree
+(add-to-list 'load-path "~/.emacs.d/elpa/neotree")
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -56,6 +69,11 @@
      (360 . "#DC8CC3"))))
      '(vc-annotate-very-old-color "#DC8CC3"))
 
+;; Emacs theme settings for running in GUI or terminal
+(if window-system
+    (load-theme 'wombat)
+  ;;(setq-default set-background-color "black")
+  (add-to-list 'default-frame-alist '(background-color . "black")))
 
 ;; (custom-set-faces
 ;;  ;; custom-set-faces was added by Custom.
@@ -64,6 +82,24 @@
 ;;  ;; If there is more than one, they won't work right.
 ;;  '(default ((t (:inherit nil :stipple nil :background "black" :foreground "unspecified-fg" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 1 :width normal :foundry "default" :family "default"))))))
 
+;; Enable Emacs mouse support in iTerm2 (self-added)
+(unless window-system
+  (require 'mouse)
+  (xterm-mouse-mode t)
+  (global-set-key [mouse-4] (lambda ()
+			      (interactive)
+			      (scroll-down 1)))
+  (global-set-key [mouse-5] (lambda ()
+			      (interactive)
+			      (scroll-up 1)))
+  (defun track-mouse (e))
+  (setq mouse-sel-mode t)
+)
+
+;; Install irony-mode on MELPA, for C/C++ auto-completion
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
 
 ;; replace the `completion-at-point' and `complete-symbol' bindings in
 ;; irony-mode's buffers by irony-mode's function
@@ -75,3 +111,58 @@
 (add-hook 'irony-mode-hook 'my-irony-mode-hook)
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
+;; company-irony (self-added)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))
+;; enable company-mode (self-added)
+(add-hook 'after-init-hook 'global-company-mode)
+
+;; set tab width in fundamental-mode and c-mode (self-added)
+(setq default-tab-width 8)
+(setq tab-width 8)
+(setq-default c-basic-offset 4)
+
+;; smooth scrolling by package "smooth-scrolling" (self-added)
+(require 'smooth-scrolling)
+(setq smooth-scroll-margin 5)
+(smooth-scrolling-mode 1)
+
+;; tuareg-mode for OCaml (self-added)
+(load "/Users/Max/.opam/system/share/emacs/site-lisp/tuareg-site-file")
+
+;; Emacs window-mode customizations (self-added)
+;;(menu-bar-mode -1)
+(toggle-scroll-bar -1)
+(tool-bar-mode -1)
+(add-to-list 'default-frame-alist
+             '(vertical-scroll-bars . nil))
+;;(linum-mode 1)
+(global-linum-mode 1)
+(column-number-mode t)
+(show-paren-mode 1)
+
+;;(set-face-attribute 'default nil :height 140)
+(add-to-list 'default-frame-alist
+             '(font . "Monaco-12"))
+(setq-default line-spacing 0.1)
+
+;; elpy (self-added)
+(with-eval-after-load 'python
+  (setq elpy-rpc-backend "jedi")
+  (elpy-enable))
+
+;; set Emacs environment variables to be the same in shell (self-added)
+(exec-path-from-shell-initialize)
+
+;; custom key bindings (self-added)
+(global-set-key (kbd "s-[") (lambda () (interactive) (other-window -1)))
+(global-set-key (kbd "s-]") (lambda () (interactive) (other-window 1)))
+
+;; ido-mode (self-added)
+(require 'ido)
+(ido-mode t)
+
+;; Emacs org-mode for LaTeX syntax highlighting (self-added)
+(eval-after-load 'org
+  '(setf org-highlight-latex-and-related '(latex)))
+;;(add-hook 'org-mode-hook (lambda () (toggle-truncate-lines 1)))
