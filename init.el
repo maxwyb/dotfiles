@@ -127,21 +127,24 @@
 
 ;; Install irony-mode on MELPA, for C/C++ auto-completion
 (use-package irony
-	     :ensure t
-	     :init
-	     (add-hook 'c++-mode-hook 'irony-mode)
-	     (add-hook 'c-mode-hook 'irony-mode)
-	     (add-hook 'objc-mode-hook 'irony-mode))
+  :ensure t
+  :init
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+  
+  :config
+  ;; company-irony (self-added)
+  (use-package company-irony
+    :ensure t
+    ;; IMPORTANT: not :init
+    :config
+    (add-to-list 'company-backends 'company-irony))
 
-;; company-irony (self-added)
-(use-package company-irony
-	     :ensure t
-	     :init
-	     '(add-to-list 'company-backends 'company-irony))
-
-;; enable company-mode (self-added)
-(use-package company
-	     :ensure t
-	     :init
-	     (add-hook 'after-init-hook 'global-company-mode))
-
+  ;; enable company-mode (self-added)
+  (use-package company
+    :ensure t
+    :init
+    ;; TODO: testing, trying to use company-irony rather than company-clang	     
+    ;;'(add-to-list 'company-backends 'company-irony)
+    (add-hook 'after-init-hook 'global-company-mode)))
