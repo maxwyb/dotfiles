@@ -15,6 +15,10 @@
 
 (package-initialize) ;; You might already have this line
 
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
 ;; ---Configurations---
 ;; Emacs theme settings for running in GUI or terminal
 (if window-system
@@ -55,7 +59,10 @@
 (ido-mode t)
 
 ;; set Emacs environment variables to be the same in shell (self-added)
-(exec-path-from-shell-initialize)
+(use-package exec-path-from-shell
+	     :ensure t
+	     :config
+	     (exec-path-from-shell-initialize))
 
 ;; custom key bindings (self-added)
 (when (eq system-type 'darwin)
@@ -92,7 +99,7 @@
 (use-package neotree
 	     :ensure t
 	     :config
-	     (global-set-key [f8] 'neotree-toggle)
+	     (global-set-key [f8] 'neotree-toggle))
 
 ;; ---Modes---
 ;; markdown-mode
