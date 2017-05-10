@@ -31,13 +31,6 @@
 (column-number-mode t)
 (show-paren-mode 1)
 
-;; Emacs font settings
-;;(set-face-attribute 'default nil :height 140)
-(when (eq system-type 'darwin)
-  (add-to-list 'default-frame-alist
-	       '(font . "Monaco-12"))
-  (setq-default line-spacing 0.1))
-
 ;; Emacs org-mode for LaTeX syntax highlighting (self-added)
 (eval-after-load 'org
   '(setf org-highlight-latex-and-related '(latex)))
@@ -49,11 +42,6 @@
 
 ;; set Emacs environment variables to be the same in shell (self-added)
 (exec-path-from-shell-initialize)
-
-;; custom key bindings (self-added)
-(when (eq system-type 'darwin)
-  (global-set-key (kbd "s-[") (lambda () (interactive) (other-window -1)))
-  (global-set-key (kbd "s-]") (lambda () (interactive) (other-window 1))))
 
 
 ;; ---Packages---
