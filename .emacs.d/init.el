@@ -1,6 +1,8 @@
 (setq use-package-always-ensure t)
 
-;; ---Pre-setup---
+;; ---------------
+;; -- Pre-setup --
+;; ---------------
 ;; Add Emacs package archive: MELPA 
 (require 'package) ;; You might already have this line
 (add-to-list 'package-archives
@@ -9,7 +11,7 @@
   ;; For important compatibility libraries like cl-lib
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 
-;; elpy
+;; elpy archive
 (add-to-list 'package-archives
              '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 
@@ -19,20 +21,22 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; ---Configurations---
+;; --------------------
+;; -- Configurations --
+;; --------------------
 ;; Emacs theme settings for running in GUI or terminal
 (if window-system
     (load-theme 'wombat)
   ;;(setq-default set-background-color "black")
   (add-to-list 'default-frame-alist '(background-color . "black")))
 
-;; set tab width in fundamental-mode and c-mode (self-added)
+;; set tab width in fundamental-mode and c-mode
 ;;(setq default-tab-width 8)
 ;;(setq tab-width 8)
 ;;(setq-default c-basic-offset 4)
 
-;; Emacs window-mode customizations (self-added)
-;;(menu-bar-mode -1)
+;; Emacs window-mode customizations
+(menu-bar-mode -1)
 (toggle-scroll-bar -1)
 (tool-bar-mode -1)
 (add-to-list 'default-frame-alist
@@ -44,34 +48,43 @@
 
 ;; Emacs font settings
 ;;(set-face-attribute 'default nil :height 140)
-(when (eq system-type 'darwin)
+(if (eq system-type 'darwin)
+    (progn
+      (add-to-list 'default-frame-alist
+		   '(font . "Monaco-12")))
   (add-to-list 'default-frame-alist
-	       '(font . "Monaco-12"))
-  (setq-default line-spacing 0.1))
+	       '(font . "Cousine-11")))
+(setq-default line-spacing 0.1)
 
-;; Emacs org-mode for LaTeX syntax highlighting (self-added)
+;; Emacs org-mode for LaTeX syntax highlighting
 (eval-after-load 'org
   '(setf org-highlight-latex-and-related '(latex)))
 ;;(add-hook 'org-mode-hook (lambda () (toggle-truncate-lines 1)))
 
-;; ido-mode (self-added)
+;; ido-mode
 (require 'ido)
 (ido-mode t)
 
-;; set Emacs environment variables to be the same in shell (self-added)
+;; set Emacs environment variables to be the same in shell
 (use-package exec-path-from-shell
 	     :ensure t
 	     :config
 	     (exec-path-from-shell-initialize))
 
-;; custom key bindings (self-added)
-(when (eq system-type 'darwin)
-  (global-set-key (kbd "s-[") (lambda () (interactive) (other-window -1)))
-  (global-set-key (kbd "s-]") (lambda () (interactive) (other-window 1))))
+;; custom key bindings
+(if (eq system-type 'darwin)
+    (progn
+      (global-set-key (kbd "s-[") (lambda () (interactive) (other-window -1)))
+      (global-set-key (kbd "s-]") (lambda () (interactive) (other-window 1))))
+  (progn
+    (global-set-key (kbd "M-[") (lambda () (interactive) (other-window -1)))
+    (global-set-key (kbd "M-]") (lambda () (interactive) (other-window 1)))))
 
 
-;; ---Packages---
-;; smooth scrolling by package "smooth-scrolling" (self-added)
+;; --------------
+;; -- Packages --
+;; --------------
+;; smooth scrolling
 ;;(require 'smooth-scrolling)
 (use-package smooth-scrolling
 	     :ensure t
@@ -79,7 +92,7 @@
 	     (setq smooth-scroll-margin 5)
 	     (smooth-scrolling-mode 1))
 
-;; Enable Emacs mouse support in iTerm2 (self-added)
+;; Enable Emacs mouse support in iTerm2
 (when (eq system-type 'darwin)
   (unless window-system
     (require 'mouse)
@@ -93,7 +106,7 @@
     (defun track-mouse (e))
     (setq mouse-sel-mode t)))
 
-;; Install Neotree
+;; neotree
 (add-to-list 'load-path "~/.emacs.d/elpa/neotree")
 ;;(require 'neotree)
 (use-package neotree
@@ -101,7 +114,9 @@
 	     :config
 	     (global-set-key [f8] 'neotree-toggle))
 
-;; ---Modes---
+;; -----------
+;; -- Modes --
+;; -----------
 ;; markdown-mode
 (use-package markdown-mode
 	     :ensure t
@@ -111,8 +126,8 @@
 		    ("\\.markdown\\'" . markdown-mode))
 	     :init (setq markdown-command "multimarkdown"))
 
-;; tuareg-mode for OCaml (self-added)
-;; TODO: now only supports macOS; has to be pre-installed by opam
+;; tuareg-mode for OCaml
+;; NOTE: has to be pre-installed by opam
 (when (eq system-type 'darwin)
   (load "/Users/Max/.opam/system/share/emacs/site-lisp/tuareg-site-file"))
 
@@ -134,17 +149,15 @@
   (add-hook 'objc-mode-hook 'irony-mode)
   
   :config
-  ;; company-irony (self-added)
+  ;; company-irony
   (use-package company-irony
     :ensure t
-    ;; IMPORTANT: not :init
+    ;; the following lines have to be run after package loads, not before
     :config
     (add-to-list 'company-backends 'company-irony))
 
-  ;; enable company-mode (self-added)
+  ;; enable company-mode
   (use-package company
     :ensure t
     :init
-    ;; TODO: testing, trying to use company-irony rather than company-clang	     
-    ;;'(add-to-list 'company-backends 'company-irony)
     (add-hook 'after-init-hook 'global-company-mode)))
