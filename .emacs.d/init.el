@@ -59,6 +59,7 @@
 ;; Emacs org-mode for LaTeX syntax highlighting
 (eval-after-load 'org
   '(setf org-highlight-latex-and-related '(latex)))
+'(org-startup-truncated nil)
 ;;(add-hook 'org-mode-hook (lambda () (toggle-truncate-lines 1)))
 
 ;; ido-mode
