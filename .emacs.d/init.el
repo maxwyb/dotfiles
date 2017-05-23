@@ -63,6 +63,7 @@
 (eval-after-load 'org
   '(setf org-highlight-latex-and-related '(latex)))
 (add-hook 'org-mode-hook (lambda () (set 'truncate-lines nil)))
+;;(org-startup-truncated nil)
 ;;(set-default 'truncate-lines t)
 ;;(add-hook 'org-mode-hook (lambda () (toggle-truncate-lines 1)))
 
