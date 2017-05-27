@@ -46,7 +46,10 @@
 (add-to-list 'default-frame-alist
              '(vertical-scroll-bars . nil))
 ;;(linum-mode 1)
-(global-linum-mode 1)
+;;(global-linum-mode 1)
+;; linum-mode should not be enabled in docView mode to accelerate loading
+(add-hook 'prog-mode-hook
+	  (lambda () (linum-mode 1)))
 (column-number-mode t)
 (show-paren-mode 1)
 
@@ -63,7 +66,9 @@
 ;; Emacs org-mode for LaTeX syntax highlighting
 (eval-after-load 'org
   '(setf org-highlight-latex-and-related '(latex)))
-'(org-startup-truncated nil)
+(add-hook 'org-mode-hook (lambda () (set 'truncate-lines nil)))
+;;(org-startup-truncated nil)
+;;(set-default 'truncate-lines t)
 ;;(add-hook 'org-mode-hook (lambda () (toggle-truncate-lines 1)))
 
 ;; ido-mode
@@ -148,6 +153,7 @@
 ;; Install irony-mode on MELPA, for C/C++ auto-completion
 (use-package irony
   :ensure t
+  ;;:commands 'irony-mode
   :init
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
