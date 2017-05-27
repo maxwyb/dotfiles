@@ -25,8 +25,11 @@
 ;; -- Configurations --
 ;; --------------------
 ;; Emacs theme settings for running in GUI or terminal
+;; (use-package solarized-theme
+;;   :ensure t)
 (if window-system
     (load-theme 'wombat)
+    ;;(load-theme 'solarized-dark)
   ;;(setq-default set-background-color "black")
   (add-to-list 'default-frame-alist '(background-color . "black")))
 
@@ -36,7 +39,8 @@
 ;;(setq-default c-basic-offset 4)
 
 ;; Emacs window-mode customizations
-(menu-bar-mode -1)
+(unless (eq system-type 'darwin)
+  (menu-bar-mode -1))
 (toggle-scroll-bar -1)
 (tool-bar-mode -1)
 (add-to-list 'default-frame-alist
@@ -68,9 +72,9 @@
 
 ;; set Emacs environment variables to be the same in shell
 (use-package exec-path-from-shell
-	     :ensure t
-	     :config
-	     (exec-path-from-shell-initialize))
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize))
 
 ;; custom key bindings
 (if (eq system-type 'darwin)
@@ -88,10 +92,10 @@
 ;; smooth scrolling
 ;;(require 'smooth-scrolling)
 (use-package smooth-scrolling
-	     :ensure t
-	     :config
-	     (setq smooth-scroll-margin 5)
-	     (smooth-scrolling-mode 1))
+  :ensure t
+  :config
+  (setq smooth-scroll-margin 5)
+  (smooth-scrolling-mode 1))
 
 ;; Enable Emacs mouse support in iTerm2
 (when (eq system-type 'darwin)
@@ -111,21 +115,21 @@
 (add-to-list 'load-path "~/.emacs.d/elpa/neotree")
 ;;(require 'neotree)
 (use-package neotree
-	     :ensure t
-	     :config
-	     (global-set-key [f8] 'neotree-toggle))
+  :ensure t
+  :config
+  (global-set-key [f8] 'neotree-toggle))
 
 ;; -----------
 ;; -- Modes --
 ;; -----------
 ;; markdown-mode
 (use-package markdown-mode
-	     :ensure t
-	     :commands (markdown-mode gfm-mode)
-	     :mode (("README\\.md\\'" . gfm-mode)
-		    ("\\.md\\'" . markdown-mode)
-		    ("\\.markdown\\'" . markdown-mode))
-	     :init (setq markdown-command "multimarkdown"))
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+	 ("\\.md\\'" . markdown-mode)
+	 ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 ;; tuareg-mode for OCaml
 ;; NOTE: has to be pre-installed by opam
@@ -136,10 +140,10 @@
 (with-eval-after-load 'python
   (elpy-enable))
 (use-package elpy
-	     :ensure t
-	     :commands (elpy-enable)
-	     :config
-	     (setq elpy-rpc-backend "jedi"))
+  :ensure t
+  :commands (elpy-enable)
+  :config
+  (setq elpy-rpc-backend "jedi"))
 
 ;; Install irony-mode on MELPA, for C/C++ auto-completion
 (use-package irony
