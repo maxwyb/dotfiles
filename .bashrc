@@ -116,6 +116,9 @@ if ! shopt -oq posix; then
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
+  # bash-completion@2 for macOS
+  elif [ -f /usr/local/share/bash-completion/bash_completion ]; then
+    . /usr/local/share/bash-completion/bash_completion
   fi
 fi
 # ---End--- .bashrc script skeleton from Ubuntu Mate on Raspberry Pi

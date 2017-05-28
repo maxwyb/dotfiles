@@ -21,6 +21,17 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("4528fb576178303ee89888e8126449341d463001cb38abe0015541eb798d8a23" default))))
+
 ;; --------------------
 ;; -- Configurations --
 ;; --------------------
@@ -28,8 +39,9 @@
 ;; (use-package solarized-theme
 ;;   :ensure t)
 (if window-system
-    (load-theme 'wombat)
+    ;;(load-theme 'wombat)
     ;;(load-theme 'solarized-dark)
+    (load-theme 'zenburn)
   ;;(setq-default set-background-color "black")
   (add-to-list 'default-frame-alist '(background-color . "black")))
 
@@ -67,6 +79,7 @@
 (eval-after-load 'org
   '(setf org-highlight-latex-and-related '(latex)))
 (add-hook 'org-mode-hook (lambda () (set 'truncate-lines nil)))
+(set 'org-src-preserve-indentation t)
 ;;(org-startup-truncated nil)
 ;;(set-default 'truncate-lines t)
 ;;(add-hook 'org-mode-hook (lambda () (toggle-truncate-lines 1)))
@@ -90,6 +103,11 @@
     (global-set-key (kbd "M-[") (lambda () (interactive) (other-window -1)))
     (global-set-key (kbd "M-]") (lambda () (interactive) (other-window 1)))))
 
+;; Emacs mode-line customizations
+(use-package smart-mode-line
+  :ensure t)
+(if window-system
+    (sml/setup))
 
 ;; --------------
 ;; -- Packages --
