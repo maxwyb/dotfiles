@@ -30,10 +30,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("4528fb576178303ee89888e8126449341d463001cb38abe0015541eb798d8a23" default)))
- '(package-selected-packages
-   (quote
-    (go-mode zenburn-theme use-package swift-mode solarized-theme smooth-scrolling smooth-scroll smart-mode-line neotree markdown-mode magit irony-eldoc exec-path-from-shell elpy ecb company-irony))))
+    ("4528fb576178303ee89888e8126449341d463001cb38abe0015541eb798d8a23" default))))
 
 ;; --------------------
 ;; -- Configurations --
@@ -199,9 +196,3 @@
 (use-package go-mode
   :ensure t)
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
