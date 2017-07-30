@@ -162,61 +162,55 @@
   (load "/Users/Max/.opam/system/share/emacs/site-lisp/tuareg-site-file"))
 
 ;; Python and elpy
+;; NOTE: well-designed Lisp programs should not use with-eval-after-load
 (with-eval-after-load 'python
   (elpy-enable))
+;; (add-hook 'python-mode-hook 'elpy-enable)
 (use-package elpy
   :ensure t
-  :commands (elpy-enable)
+  :commands elpy-enable
   :config
   (setq elpy-rpc-backend "jedi"))
 
+;; enable company-mode for code auto-completion interface
+(use-package company
+  :ensure t
+  :init
+  (add-hook 'after-init-hook 'global-company-mode))
+
 ;; Install irony-mode on MELPA, for C/C++ auto-completion
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
 (use-package irony
   :ensure t
-  ;;:commands 'irony-mode
-  :init
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'objc-mode-hook 'irony-mode)
-  
+  :commands irony-mode
   :config
   ;; company-irony
   (use-package company-irony
     :ensure t
     ;; the following lines have to be run after package loads, not before
     :config
-    (add-to-list 'company-backends 'company-irony))
-
-  ;; enable company-mode
-  (use-package company
-    :ensure t
-    :init
-    (add-hook 'after-init-hook 'global-company-mode)))
-
+    (add-to-list 'company-backends 'company-irony)))
+ 
 (use-package go-mode
   :ensure t)
 
-;; multi-web-mode for front-end web development
-(use-package multi-web-mode
+;; web-mode for HTML front-end web development
+(use-package web-mode
   :ensure t
   :config
-  (setq mweb-default-major-mode 'html-mode)
-  (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
-		    (js-mode "<script +\\(type=\"text/javascript\"\\|language=\"javascript\"\\)[^>]*>" "</script>")
-		    (js-mode "<script +\\(type=\'text/javascript\'\\|language=\'javascript\'\\)[^>]*>" "</script>")
-		    (css-mode "<style +type=\"text/css\"[^>]*>" "</style>")))
-  (setq mweb-filename-extensions '("php" "htm" "html" "ctp" "phtml" "php4" "php5"))
-  (multi-web-global-mode 1))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
 ;; tern-mode for JavaScript integration with Emacs
 ;; "auto-complete" is a required package of tern
+(add-to-list 'load-path "~/.emacs.d/tern/emacs")
+(autoload 'tern-mode "tern.el" nil t)
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
 (use-package auto-complete
   :ensure t
+  ;; :commands tern-mode
   :config
-  (add-to-list 'load-path "~/.emacs.d/tern/emacs")
-  (autoload 'tern-mode "tern.el" nil t)
-  (add-hook 'js-mode-hook (lambda () (tern-mode t)))
-
   ;; tern-auto-complete for JavaScript auto-completion
   ;; it uses "auto-complete" front-end, but we use company-mode instead
   ;; (eval-after-load 'tern
