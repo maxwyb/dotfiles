@@ -202,22 +202,37 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
+;; Modes for JavaScript IDE and React development in JSX
+(use-package js2-mode
+  :ensure t
+  ;; install stable release from GNU ELPA
+  :pin gnu
+  :mode "\\.js\\'"
+  :interpreter ("node" . js2-mode)
+  :config
+  (tern-mode t))
+(use-package rjsx-mode
+  :ensure t
+  :mode ("components\\/.*\\.js\\'" . rjsx-mode)
+  :config
+  (tern-mode t))
+
 ;; tern-mode for JavaScript integration with Emacs
 ;; "auto-complete" is a required package of tern
-(add-to-list 'load-path "~/.emacs.d/tern/emacs")
-(autoload 'tern-mode "tern.el" nil t)
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
 (use-package auto-complete
-  :ensure t
-  ;; :commands tern-mode
-  :config
-  ;; tern-auto-complete for JavaScript auto-completion
-  ;; it uses "auto-complete" front-end, but we use company-mode instead
-  ;; (eval-after-load 'tern
-  ;;   '(progn
-  ;;      (require 'tern-auto-complete)
-  ;;      (tern-ac-setup)))
+  :ensure t)
+;; Elisp built-in autoload interferes with ":commands" of use-package
+;; so let use-package manage all packages, including offline modules
+;;(add-to-list 'load-path "~/.emacs.d/tern/emacs")
+;;(autoload 'tern-mode "tern.el" nil t)
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+;;(add-hook 'js-mode-hook 'tern-mode)  ;;  an equivalent way
 
+(use-package tern
+  :load-path "tern/emacs"
+  :commands tern-mode
+  :config
+  
   (use-package company-tern
     :ensure t
     :config
@@ -226,3 +241,4 @@
 ;; [Debugging backgrace]
 ;; (setq max-specpdl-size 5)  ; default is 1000, reduce the backtrace level
 ;; (setq debug-on-error t)    ; now you should get a backtrace
+
