@@ -30,7 +30,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("4528fb576178303ee89888e8126449341d463001cb38abe0015541eb798d8a23" default))))
+    ("4528fb576178303ee89888e8126449341d463001cb38abe0015541eb798d8a23" default)))
 
 ;; --------------------
 ;; -- Configurations --
@@ -104,6 +104,7 @@
   (progn
     (global-set-key (kbd "M-[") (lambda () (interactive) (other-window -1)))
     (global-set-key (kbd "M-]") (lambda () (interactive) (other-window 1)))))
+(global-set-key (kbd "s-r") (lambda () (interactive) (revert-buffer)))
 
 ;; Emacs mode-line customizations
 (use-package smart-mode-line
@@ -116,11 +117,12 @@
 ;; --------------
 ;; smooth scrolling
 ;;(require 'smooth-scrolling)
-(use-package smooth-scrolling
-  :ensure t
-  :config
-  (setq smooth-scroll-margin 5)
-  (smooth-scrolling-mode 1))
+;; (use-package smooth-scrolling
+;;   :ensure t
+;;   :config
+;;   (setq smooth-scroll-margin 5)
+;;   (smooth-scrolling-mode 1))
+(setq scroll-step 1) ;; keyboard scroll one line at a time
 
 ;; Enable Emacs mouse support in iTerm2
 (when (eq system-type 'darwin)
@@ -143,6 +145,14 @@
   :ensure t
   :config
   (global-set-key [f8] 'neotree-toggle))
+
+;; extensions to dired
+(use-package dired+
+  :ensure t
+  :config
+  ;; show file details by default
+  (setq diredp-hide-details-initially-flag nil)
+  (setq diredp-hide-details-propagate-flag nil))
 
 ;; -----------
 ;; -- Modes --
