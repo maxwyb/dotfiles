@@ -59,7 +59,9 @@ fi
 
 if [ "$color_prompt" = yes ]; then
     # Adding git branch to PS1 if any
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \e[1;31m($(git branch 2>/dev/null | grep '^*' | colrm 1 2))\e[m\n\$ '
+    source ~/git-prompt.sh 
+    #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] \e[1;31m($(git branch 2>/dev/null | grep '^*' | colrm 1 2))\e[m\n\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\e[1;31m$(__git_ps1 " (%s)")\e[m\n\$ '
     #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
