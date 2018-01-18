@@ -30,7 +30,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("4528fb576178303ee89888e8126449341d463001cb38abe0015541eb798d8a23" default)))
+    ("4528fb576178303ee89888e8126449341d463001cb38abe0015541eb798d8a23" default))))
 
 ;; --------------------
 ;; -- Configurations --
@@ -57,13 +57,15 @@
 (tool-bar-mode -1)
 (add-to-list 'default-frame-alist
              '(vertical-scroll-bars . nil))
-;;(linum-mode 1)
 ;;(global-linum-mode 1)
 ;; linum-mode should not be enabled in docView mode to accelerate loading
 (add-hook 'prog-mode-hook
 	  (lambda () (linum-mode 1)))
 (column-number-mode t)
 (show-paren-mode 1)
+
+;; auto-fill-mode
+(setq-default fill-column 80)
 
 ;; Emacs font settings
 ;;(set-face-attribute 'default nil :height 140)
@@ -88,6 +90,9 @@
 (require 'ido)
 (ido-mode t)
 
+;; re-builder for regular expressions
+(setq-default reb-re-syntax 'string)
+
 ;; set Emacs environment variables to be the same in shell
 (use-package exec-path-from-shell
   :ensure t
@@ -100,7 +105,8 @@
 (if (eq system-type 'darwin)
     (progn
       (global-set-key (kbd "s-[") (lambda () (interactive) (other-window -1)))
-      (global-set-key (kbd "s-]") (lambda () (interactive) (other-window 1))))
+      (global-set-key (kbd "s-]") (lambda () (interactive) (other-window 1)))
+      (global-set-key (kbd "M-RET") (lambda () (interactive) (set-mark-command nil))))
   (progn
     (global-set-key (kbd "M-[") (lambda () (interactive) (other-window -1)))
     (global-set-key (kbd "M-]") (lambda () (interactive) (other-window 1)))))
@@ -125,26 +131,26 @@
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 
 ;; Enable Emacs mouse support in iTerm2
-(when (eq system-type 'darwin)
-  (unless window-system
-    (require 'mouse)
-    (xterm-mouse-mode t)
-    (global-set-key [mouse-4] (lambda ()
-				(interactive)
-				(scroll-down 1)))
-    (global-set-key [mouse-5] (lambda ()
-				(interactive)
-				(scroll-up 1)))
-    (defun track-mouse (e))
-    (setq mouse-sel-mode t)))
+;; (when (eq system-type 'darwin)
+;;   (unless window-system
+;;     (require 'mouse)
+;;     (xterm-mouse-mode t)
+;;     (global-set-key [mouse-4] (lambda ()
+;; 				(interactive)
+;; 				(scroll-down 1)))
+;;     (global-set-key [mouse-5] (lambda ()
+;; 				(interactive)
+;; 				(scroll-up 1)))
+;;     (defun track-mouse (e))
+;;     (setq mouse-sel-mode t)))
 
 ;; neotree
-(add-to-list 'load-path "~/.emacs.d/elpa/neotree")
+;;(add-to-list 'load-path "~/.emacs.d/elpa/neotree")
 ;;(require 'neotree)
-(use-package neotree
-  :ensure t
-  :config
-  (global-set-key [f8] 'neotree-toggle))
+;; (use-package neotree
+;;   :ensure t
+;;   :config
+;;   (global-set-key [f8] 'neotree-toggle))
 
 ;; extensions to dired
 (use-package dired+
@@ -166,11 +172,6 @@
 	 ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
-;; tuareg-mode for OCaml
-;; NOTE: has to be pre-installed by opam
-(when (eq system-type 'darwin)
-  (load "/Users/Max/.opam/system/share/emacs/site-lisp/tuareg-site-file"))
-
 ;; Python and elpy
 ;; NOTE: well-designed Lisp programs should not use with-eval-after-load
 (with-eval-after-load 'python
@@ -180,7 +181,8 @@
   :ensure t
   :commands elpy-enable
   :config
-  (setq elpy-rpc-backend "jedi"))
+  (setq elpy-rpc-backend "jedi")
+  (setq elpy-rpc-python-command "python3"))
 
 ;; enable company-mode for code auto-completion interface
 (use-package company
@@ -206,11 +208,15 @@
 (use-package go-mode
   :ensure t)
 
+(use-package scala-mode
+  :ensure t)
+
 ;; web-mode for HTML front-end web development
 (use-package web-mode
   :ensure t
   :config
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode)))
 
 ;; Modes for JavaScript IDE and React development in JSX
 (use-package js2-mode
@@ -229,20 +235,19 @@
 
 ;; tern-mode for JavaScript integration with Emacs
 ;; "auto-complete" is a required package of tern
-(use-package auto-complete
-  :ensure t)
+;;(use-package auto-complete
+;;  :ensure t)
+
 ;; Elisp built-in autoload interferes with ":commands" of use-package
 ;; so let use-package manage all packages, including offline modules
 ;;(add-to-list 'load-path "~/.emacs.d/tern/emacs")
 ;;(autoload 'tern-mode "tern.el" nil t)
 (add-hook 'js-mode-hook (lambda () (tern-mode t)))
-;;(add-hook 'js-mode-hook 'tern-mode)  ;;  an equivalent way
 
 (use-package tern
   :load-path "tern/emacs"
   :commands tern-mode
-  :config
-  
+  :config  
   (use-package company-tern
     :ensure t
     :config
@@ -251,4 +256,3 @@
 ;; [Debugging backgrace]
 ;; (setq max-specpdl-size 5)  ; default is 1000, reduce the backtrace level
 ;; (setq debug-on-error t)    ; now you should get a backtrace
-
