@@ -254,12 +254,14 @@
     (add-to-list 'company-backends 'company-tern)))
 
 ;; Java IDE by emacs-eclim with eclim backend
+;; only works with eclipse projects
 (setq eclim-eclipse-dirs "~/eclipse/java-oxygen/Eclipse.app/Contents/MacOS/eclipse")
 (setq eclim-executable "~/.p2/pool/plugins/org.eclim_2.7.1/bin/eclim")
-(setq eclimd-autostart t)
-(defun my-java-mode-hook ()
-    (eclim-mode t))
-(add-hook 'java-mode-hook 'my-java-mode-hook)
+;; (setq eclimd-autostart t)
+;; (add-hook 'java-mode-hook
+;; 	  (lambda ()
+;; 	    (eclim-mode t)
+;; 	    (setq tab-width 4)))
 (use-package eclim
   :ensure t
   :commands eclim-mode
@@ -268,7 +270,21 @@
     :ensure t
     :config
     (company-emacs-eclim-setup)))
-  
+
+;; Java IDE by meghanada-emacs
+;; only supports gradle and maven projects; otherwise meghanada-server triggers
+;; "java.lang.IllegalArgumentException: Project Not Found"
+;; (add-hook 'java-mode-hook
+;; 	  (lambda ()
+;; 	    (meghanada-mode t)
+;; 	    (add-hook 'before-save-hook 'meghanada-code-beautify-before-save)))
+;; (use-package meghanada
+;;   :ensure t
+;;   :commands meghanada-mode
+;;   ;; company-maghanada is inside and auto-loaded
+;;   )
+
 ;; [Debugging backgrace]
 ;; (setq max-specpdl-size 5)  ; default is 1000, reduce the backtrace level
 ;; (setq debug-on-error t)    ; now you should get a backtrace
+
