@@ -160,7 +160,7 @@
 
 ;; extensions to dired
 (use-package dired+
-  :ensure t
+  :load-path "dired-plus"
   :config
   ;; show file details by default
   (setq diredp-hide-details-initially-flag nil)
