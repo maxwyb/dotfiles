@@ -82,9 +82,6 @@
   '(setf org-highlight-latex-and-related '(latex)))
 (add-hook 'org-mode-hook (lambda () (set 'truncate-lines nil)))
 (set 'org-src-preserve-indentation t)
-;;(org-startup-truncated nil)
-;;(set-default 'truncate-lines t)
-;;(add-hook 'org-mode-hook (lambda () (toggle-truncate-lines 1)))
 
 ;; LaTeX editing environment
 (use-package auctex
@@ -261,10 +258,15 @@
   :config
   (tern-mode t))
 
+(use-package typescript-mode
+  :ensure t
+  :mode "\\.ts\\'")
+
+(use-package coffee-mode
+  :ensure t
+  :mode "\\.coffee\\'")
+
 ;; tern-mode for JavaScript integration with Emacs
-;; "auto-complete" is a required package of tern
-;;(use-package auto-complete
-;;  :ensure t)
 
 ;; Elisp built-in autoload interferes with ":commands" of use-package
 ;; so let use-package manage all packages, including offline modules
@@ -315,3 +317,4 @@
 ;; [Debugging backgrace]
 ;; (setq max-specpdl-size 5)  ; default is 1000, reduce the backtrace level
 ;; (setq debug-on-error t)    ; now you should get a backtrace
+
