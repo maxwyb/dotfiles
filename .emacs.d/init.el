@@ -86,6 +86,12 @@
 ;;(set-default 'truncate-lines t)
 ;;(add-hook 'org-mode-hook (lambda () (toggle-truncate-lines 1)))
 
+;; LaTeX editing environment
+(use-package auctex
+  :ensure t
+  ;; https://github.com/jwiegley/use-package/issues/417
+  :defer t)
+
 ;; ido-mode
 (require 'ido)
 (ido-mode t)
@@ -160,6 +166,20 @@
   (setq diredp-hide-details-initially-flag nil)
   (setq diredp-hide-details-propagate-flag nil))
 
+;; regular expressions
+(use-package visual-regexp
+  :ensure t
+  :config
+  (define-key global-map (kbd "C-c r") 'vr/replace)
+  (define-key global-map (kbd "C-c q") 'vr/query-replace))
+
+(use-package visual-regexp-steroids
+  :ensure t
+  :config
+  ;; to use visual-regexp-steroids's isearch instead of the built-in regexp isearch
+  (define-key esc-map (kbd "C-r") 'vr/isearch-backward) ;; C-M-r
+  (define-key esc-map (kbd "C-s") 'vr/isearch-forward)) ;; C-M-s
+
 ;; -----------
 ;; -- Modes --
 ;; -----------
@@ -208,15 +228,22 @@
 (use-package go-mode
   :ensure t)
 
+(use-package swift-mode
+  :ensure t)
+
 (use-package scala-mode
   :ensure t)
+
+;; default octave-mode over objc-mode
+(add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
 
 ;; web-mode for HTML front-end web development
 (use-package web-mode
   :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode)))
+  (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode)))
 
 ;; Modes for JavaScript IDE and React development in JSX
 (use-package js2-mode
@@ -226,7 +253,8 @@
   :mode "\\.js\\'"
   :interpreter ("node" . js2-mode)
   :config
-  (tern-mode t))
+  (tern-mode t)
+  (js2-mode-hide-warnings-and-errors))
 (use-package rjsx-mode
   :ensure t
   :mode ("components\\/.*\\.js\\'" . rjsx-mode)
@@ -287,4 +315,3 @@
 ;; [Debugging backgrace]
 ;; (setq max-specpdl-size 5)  ; default is 1000, reduce the backtrace level
 ;; (setq debug-on-error t)    ; now you should get a backtrace
-
